@@ -1,6 +1,6 @@
 # PNGTOASCII
 
-`fib` converts png/jpg/jpeg images into terminal-friendly ascii art.
+the `fib` converts png/jpg/jpeg images into terminal-friendly ascii art.
 
 ## Features
 
@@ -46,24 +46,3 @@ make memcheck
 
 this runs the same tests with address/undefined sanitizers enabled.
 
-## optional: download extra png test images
-
-```bash
-make fetch-images
-```
-
-Downloads go to `tests/fixtures/downloaded/`.
-
-## Demo outputs (recording-ready)
-
-```bash
-make demo
-```
-
-Generated files:
-
-- `demo/gradient_ascii.txt`
-- `demo/stripes_ascii.txt`
-- `demo/white_jpg_ascii.txt`
-- `demo/checker_ascii.txt`
-- `demo/radial_ascii.txt`
