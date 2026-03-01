@@ -1,17 +1,24 @@
-# PNGTOASCII
+# PNGTOASCII (`fib`)
 
-the `fib` converts png/jpg/jpeg images into terminal-friendly ascii art.
+`fib` converts PNG/JPG/JPEG images into high-quality, terminal-friendly ASCII art.
 
-## Features
+## Highlights
 
-- png input support (grayscale, rgb, rgba, palette)
-- jpeg input support (jpg/jpeg)
-- adaptive tone expansion for low-contrast scenes
-- edge-aware glyph placement (`/`, `\`, `|`, `-`) for clearer structure
-- floyd-steinberg-style error diffusion for more visible tonal separation
-- fast summed-area downsampling for cleaner output
-- Deterministic test fixtures and automated test Makefile
-- Demo generation targets for recording/sharing
+- Supports PNG (grayscale, RGB, RGBA, palette) and JPEG inputs
+- Adaptive tone expansion and edge-aware glyph selection for improved structure
+- Error-diffusion rendering for stronger tonal separation
+- Summed-area downsampling for stable detail at smaller output sizes
+- Production terminal color policy: `--color auto|always|never`, plus `--ansi` / `--no-ansi` aliases
+- Multiple shading profiles: `classic`, `smooth`, `blocks`
+- Deterministic fixture-based tests and sanitizer test path
+
+## Project Structure
+
+- `main.c`: CLI entrypoint and argument parsing
+- `fib.c`: application orchestration and runtime color policy
+- `fib_image.c` / `fib_image.h`: image loading and decoding (`libpng`, `libjpeg`)
+- `fib_render.c` / `fib_render.h`: ASCII rendering, palette logic, and ANSI output
+- `tests/`: deterministic fixture generation and regression tests
 
 ## Build
 
@@ -19,30 +26,40 @@ the `fib` converts png/jpg/jpeg images into terminal-friendly ascii art.
 make build
 ```
 
-## Run
+## Usage
 
 ```bash
-./fib <input.(png|jpg|jpeg)> [output_width] [output_height] [output.txt]
+./fib [--ansi|--no-ansi|--color auto|always|never] [--palette classic|smooth|blocks] <input.(png|jpg|jpeg)> [output_width] [output_height] [output.txt]
 ```
 
-Examples:
+### Options
+
+- `--color auto|always|never`: terminal color policy
+- `--ansi`: alias for `--color always`
+- `--no-ansi`: alias for `--color never`
+- `--palette classic|smooth|blocks`: shading profile
+- `-h, --help`: print usage
+- `-V, --version`: print version
+
+### Examples
 
 ```bash
 ./fib tests/fixtures/gradient.png 96 40
 ./fib tests/fixtures/stripes.png 48 12 demo/stripes_ascii.txt
+./fib --ansi --palette smooth tests/fixtures/checker.png 96 32
+./fib --color always --palette blocks tests/fixtures/radial.png 90 40
 ```
 
-## Tests
+## Testing
 
 ```bash
 make test
 ```
 
-this runs deterministic fixture generation and validates expected ascii output for png and jpg paths.
+Runs fixture generation and regression checks for PNG/JPEG parity, depth/edge quality, and terminal CLI behavior.
 
 ```bash
 make memcheck
 ```
 
-this runs the same tests with address/undefined sanitizers enabled.
-
+Runs the same suite with AddressSanitizer/UndefinedBehaviorSanitizer enabled.
