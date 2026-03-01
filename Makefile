@@ -4,6 +4,7 @@ PKG_CONFIG ?= pkg-config
 TARGET := fib
 ASAN_TARGET := fib_asan
 ASAN_FLAGS := -fsanitize=address,undefined -fno-omit-frame-pointer -g
+SOURCES := main.c fib.c fib_image.c fib_render.c
 
 PNG_CFLAGS := $(shell $(PKG_CONFIG) --cflags libpng 2>/dev/null)
 PNG_LIBS := $(shell $(PKG_CONFIG) --libs libpng 2>/dev/null)
@@ -16,14 +17,14 @@ all: build
 
 build: $(TARGET)
 
-$(TARGET): fib.c
-	$(CC) $(CFLAGS) $(PNG_CFLAGS) $(JPG_CFLAGS) $< -o $@ $(PNG_LIBS) $(JPG_LIBS)
+$(TARGET): $(SOURCES)
+	$(CC) $(CFLAGS) $(PNG_CFLAGS) $(JPG_CFLAGS) $(SOURCES) -o $@ $(PNG_LIBS) $(JPG_LIBS)
 
 test: build
 	$(MAKE) -C tests run ROOT_DIR=..
 
 memcheck:
-	$(CC) $(CFLAGS) $(ASAN_FLAGS) $(PNG_CFLAGS) $(JPG_CFLAGS) fib.c -o $(ASAN_TARGET) $(PNG_LIBS) $(JPG_LIBS)
+	$(CC) $(CFLAGS) $(ASAN_FLAGS) $(PNG_CFLAGS) $(JPG_CFLAGS) $(SOURCES) -o $(ASAN_TARGET) $(PNG_LIBS) $(JPG_LIBS)
 	ASAN_OPTIONS=detect_leaks=0 $(MAKE) -C tests run ROOT_DIR=.. BIN=../$(ASAN_TARGET)
 	rm -f $(ASAN_TARGET)
 
