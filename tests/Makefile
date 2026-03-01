@@ -13,4 +13,5 @@ run:
 	$(BIN) fixtures/stripes.png 4 2 output/stripes_png.txt >/dev/null
 	cmp -s expected/stripes.txt output/stripes_png.txt
 	FIB_BIN=$(BIN) python3 scripts/depth_edge_check.py
+	FIB_BIN=$(BIN) python3 scripts/terminal_cli_check.py
 	@echo "all tests passed"
